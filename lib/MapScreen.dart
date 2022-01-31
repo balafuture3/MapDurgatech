@@ -146,7 +146,7 @@ class MapScreenState extends State<MapScreen> {
        markerId: MarkerId("Vehicle"),
          infoWindow: InfoWindow(title: "Vehicle")
      ));
-     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 30);
+     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 16);
 
      // GoogleMapPolyUtil.isLocationOnEdge(
      //     point: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])),
@@ -316,7 +316,7 @@ class MapScreenState extends State<MapScreen> {
        markerId: MarkerId("Vehicle"),
        infoWindow: InfoWindow(title: "Vehicle")
      ));
-     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 30);
+     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 16);
       // Fluttertoast.showToast(msg: response.body);
       // Navigator.pop(context);
       // GetTokenReport();
@@ -1385,6 +1385,25 @@ class MapScreenState extends State<MapScreen> {
                           SizedBox(height: 20,),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
+                            child: Text("Start Location",style: TextStyle(color: Colors.blue),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(li1.routes[0].legs[0].startAddress),
+                          ),
+                          SizedBox(height: 20,),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text("End Location",style: TextStyle(color: Colors.blue),),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(li1.routes[0].legs[0].endAddress),
+                          ),
+                          SizedBox(height: 20,),
+
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Text("Turning Points",style: TextStyle(color: Colors.blue),),
                           ),
                       for(int i=0;i<li1.routes[0].legs[0].steps.length;i++)
@@ -1576,7 +1595,7 @@ Padding(
       // );
       // markers.clear();
       // markers.add(marker);
-      _kGooglePlex = CameraPosition(target: LatLng(currlat, currlon), zoom: 30);
+      _kGooglePlex = CameraPosition(target: LatLng(currlat, currlon), zoom: 16);
 
       loading = false;
 
