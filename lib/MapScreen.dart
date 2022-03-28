@@ -199,7 +199,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 
          direction = "R";
          if(li.result[li.result.length - 1].data==lastloc) {
-           Fluttertoast.showToast(msg: "Moving");
+           // Fluttertoast.showToast(msg: "Moving");
            direction = "S";
          }
          else
@@ -209,7 +209,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 
          direction = "L";
          if(li.result[li.result.length - 1].data==lastloc){
-           Fluttertoast.showToast(msg: "Moving");
+           // Fluttertoast.showToast(msg: "Moving");
            direction = "S";
          }
     else
