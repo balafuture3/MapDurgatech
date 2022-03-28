@@ -85,6 +85,8 @@ class MapScreenState extends State<MapScreen> {
 
   var cntsendsms=0;
 
+  String lastloc;
+
   Future<Response> Getdata() async {
     var url;
 
@@ -176,10 +178,26 @@ class MapScreenState extends State<MapScreen> {
      if(li1.routes[0].legs[0].steps.length-1!=i) {
        print(li1.routes[0].legs[0].steps.length);
        print(i);
-       if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-right")
-         direction="R";
-       else if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-left")
-         direction="L";
+       if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-right") {
+
+         direction = "R";
+         if(li.result[li.result.length - 1].data==lastloc) {
+           Fluttertoast.showToast(msg: "Moving");
+           direction = "S";
+         }
+         else
+           Fluttertoast.showToast(msg: "Turning Right");
+       }
+       else if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-left") {
+
+         direction = "L";
+         if(li.result[li.result.length - 1].data==lastloc){
+           Fluttertoast.showToast(msg: "Moving");
+           direction = "S";
+         }
+    else
+           Fluttertoast.showToast(msg: "Turning Left");
+       }
        print("man--" + li1.routes[0].legs[0].steps[i + 1].maneuver.toString());
      }
        else {
@@ -189,16 +207,21 @@ class MapScreenState extends State<MapScreen> {
                    1].endLocation.lng.toString()) {
          if(cntsendsms==0) {
            cntsendsms++;
+           Fluttertoast.showToast(msg: "Destination Reached");
            sender.sendSms(new SmsMessage("7418230370", 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toString().padLeft(6, '0')}'));
          }
          //   _sendSMS("Destination Reached", ["7418230370"]);
          // }
          direction="E";
          print("End Location");
+
+
+
        }
      }
      }
      print("current "+li.result[li.result.length - 1].data);
+     lastloc=li.result[li.result.length - 1].data;
      for(int i=0;i<li1.routes[0].legs[0].steps.length;i++) {
 
        print(li1.routes[0].legs[0].steps[i].endLocation.lat.toString()+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toString());
@@ -1205,7 +1228,7 @@ class MapScreenState extends State<MapScreen> {
     });
     GetdataFirstTime().then((value)
     {
-      timer= Timer.periodic(const Duration(seconds: 4), (timer) {
+      timer= Timer.periodic(const Duration(seconds: 2), (timer) {
         print(markers.length);
         if(markers.length>2)
         Getdata();});
