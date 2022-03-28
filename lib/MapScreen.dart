@@ -1183,6 +1183,7 @@ class MapScreenState extends State<MapScreen> {
   @override
   void dispose() {
     timer.cancel();
+
     // TODO: implement dispose
     super.dispose();
   }
