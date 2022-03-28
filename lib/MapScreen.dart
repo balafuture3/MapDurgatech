@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
@@ -182,6 +183,7 @@ class MapScreenState extends State<MapScreen> {
            li1.routes[0].legs[0].steps[i].endLocation.lat.toString() + ',' +
                li1.routes[0].legs[0].steps[li1.routes[0].legs[0].steps.length -
                    1].endLocation.lng.toString()) {
+         _sendSMS("Destination Reached", ["7418230370"]);
          direction="E";
          print("End Location");
        }
@@ -1156,7 +1158,13 @@ class MapScreenState extends State<MapScreen> {
     _addPolyLine();
   }
 
-
+  void _sendSMS(String message, List<String> recipents) async {
+    String _result = await sendSMS(message: message, recipients: recipents)
+        .catchError((onError) {
+      print(onError);
+    });
+    print(_result);
+  }
   // Polyline route = new Polyline(
   //     polylineId: PolylineId("route"),
   //     geodesic: true,
