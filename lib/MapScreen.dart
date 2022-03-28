@@ -33,7 +33,24 @@ class MapScreen extends StatefulWidget {
   MapScreenState createState() => MapScreenState();
 }
 
-class MapScreenState extends State<MapScreen> {
+class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+
+    if(state.name=="paused") {
+      print("timer close");
+      timer.cancel();
+    }
+    if(state.name=="resumed")
+      GetdataFirstTime().then((value)
+      {
+        timer= Timer.periodic(const Duration(seconds: 2), (timer) {
+          print(markers.length);
+          if(markers.length>2)
+            Getdata();});
+      });
+   print(state.name);
+  }
   PolylineResult result;
   BitmapDescriptor customIcon;
   double _originLatitude = 26.48424, _originLongitude = 50.04551;
@@ -86,6 +103,7 @@ class MapScreenState extends State<MapScreen> {
   var cntsendsms=0;
 
   String lastloc;
+
 
   Future<Response> Getdata() async {
     var url;
@@ -1205,6 +1223,7 @@ class MapScreenState extends State<MapScreen> {
   //     color: Colors.blue);
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     timer.cancel();
 
     // TODO: implement dispose
@@ -1217,7 +1236,7 @@ class MapScreenState extends State<MapScreen> {
     super.deactivate();
   }
   void initState() {
-
+    WidgetsBinding.instance.addObserver(this);
 // prevstatus();
 
     BitmapDescriptor.fromAssetImage(
