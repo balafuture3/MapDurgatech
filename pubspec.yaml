@@ -39,6 +39,7 @@ dependencies:
   flutter_polyline_points:
   flutter_animarker:
   flutter_sms: ^2.3.2
+  sms_maintained:
 
 dev_dependencies:
   flutter_test:

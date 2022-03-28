@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:math' as math;
 // import 'dart:math';
 import 'package:flutter_animarker/flutter_map_marker_animation.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:location/location.dart' as locate;
+import 'package:sms_maintained/sms.dart';
 
 import 'Model.dart';
 import 'google_maps_directions.dart';
@@ -80,6 +82,8 @@ class MapScreenState extends State<MapScreen> {
   int start=0;
 
   var direction='O';
+
+  var cntsendsms=0;
 
   Future<Response> Getdata() async {
     var url;
@@ -183,7 +187,12 @@ class MapScreenState extends State<MapScreen> {
            li1.routes[0].legs[0].steps[i].endLocation.lat.toString() + ',' +
                li1.routes[0].legs[0].steps[li1.routes[0].legs[0].steps.length -
                    1].endLocation.lng.toString()) {
-         _sendSMS("Destination Reached", ["7418230370"]);
+         if(cntsendsms==0) {
+           cntsendsms++;
+           sender.sendSms(new SmsMessage("7418230370", 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toString().padLeft(6, '0')}'));
+         }
+         //   _sendSMS("Destination Reached", ["7418230370"]);
+         // }
          direction="E";
          print("End Location");
        }
@@ -1121,7 +1130,7 @@ class MapScreenState extends State<MapScreen> {
   List<Placemark> placemarks;
   locate.Location location = new locate.Location();
   List<Location> locations;
-
+  SmsSender sender = new SmsSender();
   _addPolyLine() {
     PolylineId id = PolylineId("poly");
     Polyline polyline = Polyline(
@@ -1487,6 +1496,7 @@ Padding(
           SizedBox(height: 10,),
           FloatingActionButton(child: Icon(Icons.clear),onPressed: ()
           {
+            cntsendsms=0;
             cnt1=0;
             markers.clear();
             polylines.clear();
