@@ -42,13 +42,17 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
       print("timer close");
       timer.cancel();
     }
-    if(state.name=="resumed")
-
-        timer= Timer.periodic(const Duration(seconds: 2), (timer) {
-          print(markers.length);
-          if(markers.length>2)
-            Getdata();});
-
+    if(state.name=="resumed") {
+      _controller.future.then((value)
+      {
+        value.setMapStyle("[]");
+      });
+      timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+        print(markers.length);
+        if (markers.length > 2)
+          Getdata();
+      });
+    }
    print(state.name);
   }
   PolylineResult result;
