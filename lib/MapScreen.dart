@@ -19,6 +19,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:location/location.dart' as locate;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_maintained/sms.dart';
 
 import 'Model.dart';
@@ -102,6 +103,15 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   var cntsendsms=0;
 
   String lastloc;
+
+  Future<void> Contacheck() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var _seen = (prefs.getBool('seen') ?? false);
+    if (_seen) {
+      MobileNumberController.text = prefs.getString("mobilenumber");
+
+    }
+  }
 
 
   Future<Response> Getdata() async {
@@ -225,7 +235,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
          if(cntsendsms==0) {
            cntsendsms++;
            Fluttertoast.showToast(msg: "Destination Reached");
-           sender.sendSms(new SmsMessage("7418230370", 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toString().padLeft(6, '0')}'));
+           sender.sendSms(new SmsMessage(MobileNumberController.text, 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toString().padLeft(6, '0')}'));
          }
          //   _sendSMS("Destination Reached", ["7418230370"]);
          // }
@@ -1162,6 +1172,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   // Position position;
   TextEditingController AddressController = new TextEditingController();
   TextEditingController _typeAheadController = new TextEditingController();
+  TextEditingController MobileNumberController = new TextEditingController();
   var loading = false;
   bool textcheck = false;
   final controller = Completer<GoogleMapController>();
@@ -1173,7 +1184,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   SmsSender sender = new SmsSender();
   _addPolyLine() {
     PolylineId id = PolylineId("poly");
-    Polyline polyline = Polyline(
+    Polyline polyline =  Polyline(
       geodesic: true,
       width: 2,
         polylineId: id, color: Colors.red, points: polylineCoordinates);
@@ -1235,6 +1246,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     super.deactivate();
   }
   void initState() {
+ Contacheck();
     WidgetsBinding.instance.addObserver(this);
 // prevstatus();
 
@@ -1565,6 +1577,29 @@ Padding(
 
             });
           },),
+          SizedBox(height: 10,),
+          FloatingActionButton(child: Icon(Icons.perm_contact_cal),onPressed: ()
+          {
+            showDialog(context: context, builder: (BuildContext context) { 
+              return AlertDialog(
+                title: Text("Mobile Number for OTP"),
+                content: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: MobileNumberController,
+                      )
+                    ],
+                  ),
+                ),
+                actions: [TextButton(onPressed: (){
+                  setRegistered(MobileNumberController.text);
+                  Navigator.pop(context);
+
+                }, child: Text("OK"))],
+              );
+            },);
+          },),
           SizedBox(height: 50,),
         ],
       ),
@@ -1663,6 +1698,11 @@ Padding(
     });
   }
 
+  Future<bool> setRegistered(mobilenumber) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('mobilenumber', mobilenumber);
+    await prefs.setBool('seen', true);
+  }
   // Future<void> prevstatus() async {
   //   SharedPreferences prefs = await SharedPreferences.getInstance();
   //   enableStartTravel = !prefs.getBool('tstart');
@@ -1671,6 +1711,8 @@ Padding(
   //   enableWorkEnd = !prefs.getBool('wend');
   // }
 }
+
+
 
 // class BackendService {
 //   static Future<List> getSuggestions(String query) async {
