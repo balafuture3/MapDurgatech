@@ -208,22 +208,22 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
        if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-right") {
 
          direction = "R";
-         if(li.result[li.result.length - 1].data==lastloc) {
-           // Fluttertoast.showToast(msg: "Moving");
-           direction = "S";
-         }
-         else
-           Fluttertoast.showToast(msg: "Turning Right");
+         // if(li.result[li.result.length - 1].data==lastloc) {
+         //   // Fluttertoast.showToast(msg: "Moving");
+         //   direction = "S";
+         // }
+         // else
+         //   Fluttertoast.showToast(msg: "Turning Right");
        }
        else if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-left") {
 
          direction = "L";
-         if(li.result[li.result.length - 1].data==lastloc){
-           // Fluttertoast.showToast(msg: "Moving");
-           direction = "S";
-         }
-    else
-           Fluttertoast.showToast(msg: "Turning Left");
+    //      if(li.result[li.result.length - 1].data==lastloc){
+    //        // Fluttertoast.showToast(msg: "Moving");
+    //        direction = "S";
+    //      }
+    // else
+    //        Fluttertoast.showToast(msg: "Turning Left");
        }
        print("man--" + li1.routes[0].legs[0].steps[i + 1].maneuver.toString());
      }
