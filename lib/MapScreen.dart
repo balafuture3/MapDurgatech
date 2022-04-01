@@ -1645,11 +1645,11 @@ Padding(
                         width: MediaQuery.of(context).size.width/2,
                           child: SfRadialGauge(
                               axes: <RadialAxis>[
-                                RadialAxis(minimum: 0, maximum: 15,
+                                RadialAxis(minimum: 0, maximum: 20,
                                     ranges: <GaugeRange>[
                                       GaugeRange(startValue: 0, endValue: 10, color:Colors.red),
-                                      GaugeRange(startValue: 10,endValue: 13,color: Colors.green),
-                                      GaugeRange(startValue: 13,endValue: 15,color: Colors.red)],
+                                      GaugeRange(startValue: 10,endValue: 14,color: Colors.green),
+                                      GaugeRange(startValue: 14,endValue: 20,color: Colors.red)],
                                     pointers: <GaugePointer>[
                                       NeedlePointer(value: li!=null?double.parse(li.result[li.result.length-1].Battery.trim()):"12")],
                                     annotations: <GaugeAnnotation>[
