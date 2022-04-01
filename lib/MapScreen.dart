@@ -21,6 +21,7 @@ import 'package:http/http.dart';
 import 'package:location/location.dart' as locate;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_maintained/sms.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import 'Model.dart';
 import 'google_maps_directions.dart';
@@ -1602,6 +1603,33 @@ Padding(
 
                 }, child: Text("OK"))],
               );
+            },);
+          },),
+          SizedBox(height: 10,),
+          FloatingActionButton(child: Icon(Icons.battery_std_outlined),onPressed: ()
+          {
+            showDialog(context: context, builder: (BuildContext context) {
+              return Scaffold(
+                  body: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height/2,
+                        width: MediaQuery.of(context).size.width/2,
+                          child: SfRadialGauge(
+                              axes: <RadialAxis>[
+                                RadialAxis(minimum: 0, maximum: 15,
+                                    ranges: <GaugeRange>[
+                                      GaugeRange(startValue: 0, endValue: 10, color:Colors.red),
+                                      GaugeRange(startValue: 10,endValue: 13,color: Colors.green),
+                                      GaugeRange(startValue: 13,endValue: 15,color: Colors.red)],
+                                    pointers: <GaugePointer>[
+                                      NeedlePointer(value: li!=null?double.parse(li.result[li.result.length-1].Battery.trim()):"12")],
+                                    annotations: <GaugeAnnotation>[
+                                      GaugeAnnotation(widget: Container(child:
+                                      Text(li!=null?"${li.result[li.result.length-1].Battery.trim()} V":"12 V",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                                          angle: 90, positionFactor: 0.5
+                                      )]
+                                )])
+                      )));
             },);
           },),
           SizedBox(height: 50,),

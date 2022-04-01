@@ -29,6 +29,7 @@ class Result {
   String data;
   String source;
   String dateTime;
+  String Battery;
 
   Result({this.docNo, this.data, this.source, this.dateTime});
 
@@ -37,6 +38,7 @@ class Result {
     data = json['Data'];
     source = json['Source'];
     dateTime = json['DateTime'];
+    Battery = json['Battery'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +47,7 @@ class Result {
     data['Data'] = this.data;
     data['Source'] = this.source;
     data['DateTime'] = this.dateTime;
+    data['Battery'] = this.Battery;
     return data;
   }
 }
