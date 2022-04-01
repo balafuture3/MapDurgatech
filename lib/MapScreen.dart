@@ -117,7 +117,35 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 
     }
   }
+  Future<Response> GetBatdata() async {
+    var url;
 
+    url = Uri.parse("http://14.98.224.37:903/GetData");
+
+    // print(url);
+    // print(headers);
+
+    // setState(() {
+    //   loading = true;
+    // });
+    Map data = {
+
+      "direction":direction,
+      // "status":status
+
+    };
+    print(jsonEncode(data));
+    var response = await http.post(
+      url,
+      body: jsonEncode(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      li = Model.fromJson(json.decode(response.body));
+    }}
 
   Future<Response> Getdata() async {
     var url;
@@ -149,7 +177,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     {
 
      li=Model.fromJson(json.decode(response.body));
-     print(li.result[li.result.length-1].data);
+     print(li.result[li.result.length-1].Battery);
      // markers.elementAt(markers.length-1);
      markers.clear();
      markers.add(Marker(position: LatLng(_originLatitude,_originLongitude), markerId: MarkerId("Driver"),
@@ -373,7 +401,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     {
 
      li=Model.fromJson(json.decode(response.body));
-     print(li.result[li.result.length-1].data);
+     print(li.result[li.result.length-1].Battery);
      markers.clear();
      markers.add(Marker(
        anchor: const Offset(0.5, 0.5),
@@ -1608,6 +1636,7 @@ Padding(
           SizedBox(height: 10,),
           FloatingActionButton(child: Icon(Icons.battery_std_outlined),onPressed: ()
           {
+            GetBatdata().then((value) =>
             showDialog(context: context, builder: (BuildContext context) {
               return Scaffold(
                   body: Center(
@@ -1630,7 +1659,7 @@ Padding(
                                       )]
                                 )])
                       )));
-            },);
+            },));
           },),
           SizedBox(height: 50,),
         ],
