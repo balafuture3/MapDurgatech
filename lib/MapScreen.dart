@@ -36,6 +36,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
+  var otp=0;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
 
@@ -448,6 +450,33 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   Future<Response> StartStop(val) async {
     var url;
     url = Uri.parse("http://14.98.224.37:903/UpdateStatus");
+    Map data = {
+      "status":val
+    };
+    print(jsonEncode(data));
+    var response = await http.post(
+      url,
+      body: jsonEncode(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    );
+    print(response.body);
+    if (response.statusCode == 200)
+    {
+
+      // li=Model.fromJson(json.decode(response.body));
+
+    }
+
+    setState(() {
+      loading = false;
+    });
+    return response;
+  }
+  Future<Response> OtpSend(val) async {
+    var url;
+    url = Uri.parse("http://14.98.224.37:903/UpdateOTP");
     Map data = {
       "status":val
     };
@@ -1632,6 +1661,51 @@ Padding(
                 }, child: Text("OK"))],
               );
             },);
+          },),
+          SizedBox(height: 10,),
+          FloatingActionButton(
+            child: Icon(
+                otp==0?
+                Icons.numbers:Icons.nature_sharp),onPressed: (){
+
+              OtpSend(otp==0?"10101010":"0000000000");
+              otp==0?otp=1: otp=0;
+
+            // print(_originLatitude, );
+            // print(_originLongitude, );
+            // print(_destLatitude, );
+            // print(_destLongitude, );
+            // markers.clear();
+            // polylines.clear();
+            // markers.add(Marker(position: LatLng(_originLatitude,_originLongitude),
+            //     markerId: MarkerId("ggf"),
+            //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),));
+            // markers.add(Marker(position: LatLng(_destLatitude,_destLongitude), markerId: MarkerId("sd")));
+            // if(cnt1==0) {
+            //   cnt1++;
+            //   markers.add(Marker(
+            //     anchor: const Offset(0.5, 0.5),
+            //     icon: customIcon,
+            //     position: LatLng(_originLatitude, _originLongitude),
+            //     markerId: MarkerId("Vehicle"),
+            //   ));
+            // }
+            // else
+            //   {
+            //     markers.add(Marker(
+            //       anchor: const Offset(0.5, 0.5),
+            //       icon: customIcon,
+            //       position: LatLng(_originLatitude-0.0002,_originLongitude), markerId: MarkerId("Vehicle"),
+            //     ));
+            // }
+
+            // _getPolyline();
+            // polylines
+            // markers.clear();
+            // polylines.clear();
+            setState(() {
+
+            });
           },),
           SizedBox(height: 10,),
           FloatingActionButton(child: Icon(Icons.battery_std_outlined),onPressed: ()
