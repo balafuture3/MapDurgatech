@@ -41,7 +41,7 @@ dependencies:
   flutter_sms: ^2.3.2
   sms_maintained:
   shared_preferences:
-  syncfusion_flutter_gauges: ^19.4.56
+#  syncfusion_flutter_gauges: ^19.4.56
 
 dev_dependencies:
   flutter_test:

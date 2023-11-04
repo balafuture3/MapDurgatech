@@ -21,9 +21,9 @@ import 'package:http/http.dart';
 import 'package:location/location.dart' as locate;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sms_maintained/sms.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
+// import 'package:syncfusion_flutter_gauges/gauges.dart';
 
-import 'Model.dart';
+import 'ModelNew.dart';
 import 'google_maps_directions.dart';
 
 
@@ -100,7 +100,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   var visibletravel = true;
   var cnt1=0;
 
-  Model li;
+  ModelNew li;
   GoogleDirectionModel li1;
 
   int start=0;
@@ -146,13 +146,13 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     );
     print(response.body);
     if (response.statusCode == 200) {
-      li = Model.fromJson(json.decode(response.body));
+      li = ModelNew.fromJson(json.decode(response.body));
     }}
 
   Future<Response> Getdata() async {
     var url;
 
-    url = Uri.parse("http://14.98.224.37:903/GetData");
+    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/Getdata.php");
 
     // print(url);
     // print(headers);
@@ -166,7 +166,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
       // "status":status
 
     };
-    print(jsonEncode(data));
+    // print(jsonEncode(data));
     var response = await http.post(
       url,
       body: jsonEncode(data),
@@ -174,12 +174,12 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
         "Content-Type": "application/json",
       },
     );
-    print(response.body);
+    // print(response.body);
     if (response.statusCode == 200)
     {
 
-     li=Model.fromJson(json.decode(response.body));
-     print(li.result[li.result.length-1].Battery);
+     li=ModelNew.fromJson(json.decode(response.body));
+     // print(li.data[li.data.length-1].temp);
      // markers.elementAt(markers.length-1);
      markers.clear();
      markers.add(Marker(position: LatLng(_originLatitude,_originLongitude), markerId: MarkerId("Driver"),
@@ -192,7 +192,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
              _originLongitude = lat.longitude;
            });
            _getPolyline();
-           GetDirections(_originLatitude.toString()+','+_originLongitude.toString(),_destLatitude.toString()+','+_destLongitude.toString());
+           GetDirections(_originLatitude.toStringAsFixed(6)+','+_originLongitude.toStringAsFixed(6),_destLatitude.toStringAsFixed(6)+','+_destLongitude.toStringAsFixed(6));
 
          }));
      markers.add(
@@ -203,7 +203,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
                _destLongitude = lat.longitude;
              });
              _getPolyline();
-             GetDirections(_originLatitude.toString()+','+_originLongitude.toString(),_destLatitude.toString()+','+_destLongitude.toString());
+             GetDirections(_originLatitude.toStringAsFixed(6)+','+_originLongitude.toStringAsFixed(6),_destLatitude.toStringAsFixed(6)+','+_destLongitude.toStringAsFixed(6));
 
            }),);
 
@@ -211,11 +211,11 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
      markers.add(Marker(
        anchor: const Offset(0.5, 0.5),
        icon: customIcon,
-       position: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])),
+       position: LatLng(double.parse(li.data[li.data.length-1].location.split(',')[0]), double.parse(li.data[li.data.length-1].location.split(',')[1])),
        markerId: MarkerId("Vehicle"),
          infoWindow: InfoWindow(title: "Vehicle")
      ));
-     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 16);
+     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.data[li.data.length-1].location.split(',')[0]), double.parse(li.data[li.data.length-1].location.split(',')[1])), zoom: 16);
 
      // GoogleMapPolyUtil.isLocationOnEdge(
      //     point: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])),
@@ -232,14 +232,13 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
      //     start: polylineCoordinates.first,
      //     end: polylineCoordinates.last,
      // ).then((result) => print(result));
-
+if(li1!=null)
      for(int i=0;i<li1.routes[0].legs[0].steps.length;i++) {
        // print("current "+li.result[li.result.length - 1].data);
-       // print(li1.routes[0].legs[0].steps[i].endLocation.lat.toString()+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toString());
-       if (li.result[li.result.length - 1].data==li1.routes[0].legs[0].steps[i].endLocation.lat.toString()+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toString())
+       print(li.data[li.data.length - 1].location+"=="+li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6)+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toStringAsFixed(6));
+       if (li.data[li.data.length - 1].location==li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6)+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toStringAsFixed(6))
      if(li1.routes[0].legs[0].steps.length-1!=i) {
-       print(li1.routes[0].legs[0].steps.length);
-       print(i);
+    print("inside check");
        if(li1.routes[0].legs[0].steps[i + 1].maneuver.toString()=="turn-right") {
 
          direction = "R";
@@ -263,14 +262,14 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
        print("man--" + li1.routes[0].legs[0].steps[i + 1].maneuver.toString());
      }
        else {
-       if (li.result[li.result.length - 1].data ==
-           li1.routes[0].legs[0].steps[i].endLocation.lat.toString() + ',' +
+       if (li.data[li.data.length - 1].location ==
+           li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6) + ',' +
                li1.routes[0].legs[0].steps[li1.routes[0].legs[0].steps.length -
-                   1].endLocation.lng.toString()) {
+                   1].endLocation.lng.toStringAsFixed(6)) {
          if(cntsendsms==0) {
            cntsendsms++;
            Fluttertoast.showToast(msg: "Destination Reached");
-           sender.sendSms(new SmsMessage(MobileNumberController.text, 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toString().padLeft(6, '0')}'));
+           // sender.sendSms(new SmsMessage(MobileNumberController.text, 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toStringAsFixed(6).padLeft(6, '0')}'));
          }
          //   _sendSMS("Destination Reached", ["7418230370"]);
          // }
@@ -282,19 +281,19 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
        }
      }
      }
-     print("current "+li.result[li.result.length - 1].data);
-     lastloc=li.result[li.result.length - 1].data;
-     for(int i=0;i<li1.routes[0].legs[0].steps.length;i++) {
-
-       print(li1.routes[0].legs[0].steps[i].endLocation.lat.toString()+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toString());
-
-
-     }
+     print("current "+li.data[li.data.length - 1].location);
+     lastloc=li.data[li.data.length - 1].location;
+     // for(int i=0;i<li1.routes[0].legs[0].steps.length;i++) {
+     //
+     //   print(li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6)+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toStringAsFixed(6));
+     //
+     //
+     // }
       // Fluttertoast.showToast(msg: response.body);
       // Navigator.pop(context);
       // GetTokenReport();
       // InsertQuotDetail();
-      // Userid = liLogin.userid.toString();
+      // Userid = liLogin.userid.toStringAsFixed(6);
       // superuser = liLogin.superuser == 1 ? true : false;
       // print(liLogin.status);
       // if (liLogin.status == 1)
@@ -317,6 +316,9 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
       //       });
 
       // .cookie.split(';')[0]}");
+      setState(() {
+
+      });
     }
 
     setState(() {
@@ -362,8 +364,8 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
        print("maneuver"+li1.routes[0].legs[0].steps[i].maneuver.toString());
        print("polyline"+li1.routes[0].legs[0].steps[i].polyline.points.toString());
        print("duration"+li1.routes[0].legs[0].steps[i].duration.text);
-       print("End Loc Lat"+li1.routes[0].legs[0].steps[i].endLocation.lat.toString());
-       print("End Loc Lon"+li1.routes[0].legs[0].steps[i].endLocation.lng.toString());
+       print("End Loc Lat"+li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6));
+       print("End Loc Lon"+li1.routes[0].legs[0].steps[i].endLocation.lng.toStringAsFixed(6));
      }
 
     }
@@ -376,7 +378,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   Future<Response> GetdataFirstTime() async {
     var url;
 
-    url = Uri.parse("http://14.98.224.37:903/GetData");
+    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/Getdata.php");
 
     // print(url);
     // print(headers);
@@ -402,22 +404,22 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     if (response.statusCode == 200)
     {
 
-     li=Model.fromJson(json.decode(response.body));
-     print(li.result[li.result.length-1].Battery);
+     li=ModelNew.fromJson(json.decode(response.body));
+     print(li.data[li.data.length-1].temp);
      markers.clear();
      markers.add(Marker(
        anchor: const Offset(0.5, 0.5),
        icon: customIcon,
-       position: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])),
+       position: LatLng(double.parse(li.data[li.data.length-1].location.split(',')[0]), double.parse(li.data[li.data.length-1].location.split(',')[1])),
        markerId: MarkerId("Vehicle"),
        infoWindow: InfoWindow(title: "Vehicle")
      ));
-     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.result[li.result.length-1].data.split(',')[0]), double.parse(li.result[li.result.length-1].data.split(',')[1])), zoom: 16);
+     _kGooglePlex = CameraPosition(target: LatLng(double.parse(li.data[li.data.length-1].location.split(',')[0]), double.parse(li.data[li.data.length-1].location.split(',')[1])), zoom: 16);
       // Fluttertoast.showToast(msg: response.body);
       // Navigator.pop(context);
       // GetTokenReport();
       // InsertQuotDetail();
-      // Userid = liLogin.userid.toString();
+      // Userid = liLogin.userid.toStringAsFixed(6);
       // superuser = liLogin.superuser == 1 ? true : false;
       // print(liLogin.status);
       // if (liLogin.status == 1)
@@ -649,7 +651,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 //       location = "";
 //       AddressController.text = "";
 //     } else
-//       location = currlat.toString() + ',' + currlon.toString();
+//       location = currlat.toStringAsFixed(6) + ',' + currlon.toStringAsFixed(6);
 //
 //     var envelope = '''<?xml version="1.0" encoding="utf-8"?>
 // <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
@@ -689,7 +691,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 // //       <TRAVELSTART>Y</TRAVELSTART>
 // //       <T_STARTDATE>${DateFormat("yyyy-MM-dd").format(DateTime.now())}</T_STARTDATE>
 // //       <T_STARTTIME>${DateFormat("hh:mm a").format(DateTime.now())}</T_STARTTIME>
-// //       <T_STARTLATLANG>${currlat.toString()+','+currlon.toString()}</T_STARTLATLANG>
+// //       <T_STARTLATLANG>${currlat.toStringAsFixed(6)+','+currlon.toStringAsFixed(6)}</T_STARTLATLANG>
 // //       <T_STARTADDRESS>${AddressController.text}</T_STARTADDRESS>
 // //       <USERID>${LoginScreenState.empID}</USERID>
 // //     </IN_MOB_STARTATTENDANCE>
@@ -779,7 +781,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 //       location = "";
 //       AddressController.text = "";
 //     } else
-//       location = currlat.toString() + ',' + currlon.toString();
+//       location = currlat.toStringAsFixed(6) + ',' + currlon.toStringAsFixed(6);
 //     var envelope = '''<?xml version="1.0" encoding="utf-8"?>
 // <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
 //   <soap12:Body>
@@ -893,7 +895,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 //       location = "";
 //       AddressController.text = "";
 //     } else
-//       location = currlat.toString() + ',' + currlon.toString();
+//       location = currlat.toStringAsFixed(6) + ',' + currlon.toStringAsFixed(6);
 //     var envelope = '''<?xml version="1.0" encoding="utf-8"?>
 // <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
 //   <soap12:Body>
@@ -1007,7 +1009,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 //       location = "";
 //       AddressController.text = "";
 //     } else
-//       location = currlat.toString() + ',' + currlon.toString();
+//       location = currlat.toStringAsFixed(6) + ',' + currlon.toStringAsFixed(6);
 //     var envelope = '''<?xml version="1.0" encoding="utf-8"?>
 // <soap12:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope">
 //   <soap12:Body>
@@ -1321,7 +1323,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
     GetdataFirstTime().then((value)
     {
       timer= Timer.periodic(const Duration(seconds: 2), (timer) {
-        print(markers.length);
+        // print(markers.length);
         if(markers.length>2)
         Getdata();});
     });
@@ -1407,7 +1409,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
                                 _originLongitude = lat.longitude;
                               });
                               _getPolyline();
-                              GetDirections(_originLatitude.toString()+','+_originLongitude.toString(),_destLatitude.toString()+','+_destLongitude.toString());
+                              GetDirections(_originLatitude.toStringAsFixed(6)+','+_originLongitude.toStringAsFixed(6),_destLatitude.toStringAsFixed(6)+','+_destLongitude.toStringAsFixed(6));
 
                             }));
 
@@ -1424,11 +1426,11 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
                                   _destLongitude = lat.longitude;
                                 });
                                 _getPolyline();
-                                GetDirections(_originLatitude.toString()+','+_originLongitude.toString(),_destLatitude.toString()+','+_destLongitude.toString());
+                                GetDirections(_originLatitude.toStringAsFixed(6)+','+_originLongitude.toStringAsFixed(6),_destLatitude.toStringAsFixed(6)+','+_destLongitude.toStringAsFixed(6));
 
                               }),);
                       _getPolyline();
-                      GetDirections(_originLatitude.toString()+','+_originLongitude.toString(),_destLatitude.toString()+','+_destLongitude.toString());
+                      GetDirections(_originLatitude.toStringAsFixed(6)+','+_originLongitude.toStringAsFixed(6),_destLatitude.toStringAsFixed(6)+','+_destLongitude.toStringAsFixed(6));
                     }
                     // DirectionsService.init('AIzaSyB28TEZPLhB60JhhwFpcx86GjJHIPPxZ9U');
                     //
@@ -1513,7 +1515,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(li.result[li.result.length - 1].data),
+                            child: Text(li.data[li.data.length - 1].location),
                           ),
                           SizedBox(height: 20,),
                           Padding(
@@ -1542,7 +1544,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
                       for(int i=0;i<li1.routes[0].legs[0].steps.length;i++)
 Padding(
   padding: const EdgeInsets.all(8.0),
-  child:   TextField(controller: TextEditingController(text: li1.routes[0].legs[0].steps[i].endLocation.lat.toString()+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toString()),),
+  child:   TextField(controller: TextEditingController(text: li1.routes[0].legs[0].steps[i].endLocation.lat.toStringAsFixed(6)+','+li1.routes[0].legs[0].steps[i].endLocation.lng.toStringAsFixed(6)),),
 )
                         ],
                       ),
@@ -1639,103 +1641,103 @@ Padding(
 
             });
           },),
-          SizedBox(height: 10,),
-          FloatingActionButton(child: Icon(Icons.perm_contact_cal),onPressed: ()
-          {
-            showDialog(context: context, builder: (BuildContext context) { 
-              return AlertDialog(
-                title: Text("Mobile Number for OTP"),
-                content: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      TextField(
-                        controller: MobileNumberController,
-                      )
-                    ],
-                  ),
-                ),
-                actions: [TextButton(onPressed: (){
-                  setRegistered(MobileNumberController.text);
-                  Navigator.pop(context);
-
-                }, child: Text("OK"))],
-              );
-            },);
-          },),
-          SizedBox(height: 10,),
-          FloatingActionButton(
-            child: Icon(
-                otp==0?
-                Icons.numbers:Icons.nature_sharp),onPressed: (){
-
-              OtpSend(otp==0?"10101010":"0000000000");
-              otp==0?otp=1: otp=0;
-
-            // print(_originLatitude, );
-            // print(_originLongitude, );
-            // print(_destLatitude, );
-            // print(_destLongitude, );
-            // markers.clear();
-            // polylines.clear();
-            // markers.add(Marker(position: LatLng(_originLatitude,_originLongitude),
-            //     markerId: MarkerId("ggf"),
-            //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),));
-            // markers.add(Marker(position: LatLng(_destLatitude,_destLongitude), markerId: MarkerId("sd")));
-            // if(cnt1==0) {
-            //   cnt1++;
-            //   markers.add(Marker(
-            //     anchor: const Offset(0.5, 0.5),
-            //     icon: customIcon,
-            //     position: LatLng(_originLatitude, _originLongitude),
-            //     markerId: MarkerId("Vehicle"),
-            //   ));
-            // }
-            // else
-            //   {
-            //     markers.add(Marker(
-            //       anchor: const Offset(0.5, 0.5),
-            //       icon: customIcon,
-            //       position: LatLng(_originLatitude-0.0002,_originLongitude), markerId: MarkerId("Vehicle"),
-            //     ));
-            // }
-
-            // _getPolyline();
-            // polylines
-            // markers.clear();
-            // polylines.clear();
-            setState(() {
-
-            });
-          },),
-          SizedBox(height: 10,),
-          FloatingActionButton(child: Icon(Icons.battery_std_outlined),onPressed: ()
-          {
-            GetBatdata().then((value) =>
-            showDialog(context: context, builder: (BuildContext context) {
-              return Scaffold(
-                  body: Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height/2,
-                        width: MediaQuery.of(context).size.width/2,
-                          child: SfRadialGauge(
-                              axes: <RadialAxis>[
-                                RadialAxis(minimum: 0, maximum: 20,
-                                    ranges: <GaugeRange>[
-                                      GaugeRange(startValue: 0, endValue: 10, color:Colors.red),
-                                      GaugeRange(startValue: 10,endValue: 14,color: Colors.green),
-                                      GaugeRange(startValue: 14,endValue: 20,color: Colors.red)],
-                                    pointers: <GaugePointer>[
-                                      NeedlePointer(value: li!=null?double.parse(li.result[li.result.length-1].Battery.trim()):"12")],
-                                    annotations: <GaugeAnnotation>[
-                                      GaugeAnnotation(widget: Container(child:
-                                      Text(li!=null?"${li.result[li.result.length-1].Battery.trim()} V":"12 V",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
-                                          angle: 90, positionFactor: 0.5
-                                      )]
-                                )])
-                      )));
-            },));
-          },),
           SizedBox(height: 50,),
+          // FloatingActionButton(child: Icon(Icons.perm_contact_cal),onPressed: ()
+          // {
+          //   showDialog(context: context, builder: (BuildContext context) {
+          //     return AlertDialog(
+          //       title: Text("Mobile Number for OTP"),
+          //       content: SingleChildScrollView(
+          //         child: Column(
+          //           children: [
+          //             TextField(
+          //               controller: MobileNumberController,
+          //             )
+          //           ],
+          //         ),
+          //       ),
+          //       actions: [TextButton(onPressed: (){
+          //         setRegistered(MobileNumberController.text);
+          //         Navigator.pop(context);
+          //
+          //       }, child: Text("OK"))],
+          //     );
+          //   },);
+          // },),
+          // SizedBox(height: 10,),
+          // FloatingActionButton(
+          //   child: Icon(
+          //       otp==0?
+          //       Icons.numbers:Icons.nature_sharp),onPressed: (){
+          //
+          //     OtpSend(otp==0?"10101010":"0000000000");
+          //     otp==0?otp=1: otp=0;
+          //
+          //   // print(_originLatitude, );
+          //   // print(_originLongitude, );
+          //   // print(_destLatitude, );
+          //   // print(_destLongitude, );
+          //   // markers.clear();
+          //   // polylines.clear();
+          //   // markers.add(Marker(position: LatLng(_originLatitude,_originLongitude),
+          //   //     markerId: MarkerId("ggf"),
+          //   //   icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),));
+          //   // markers.add(Marker(position: LatLng(_destLatitude,_destLongitude), markerId: MarkerId("sd")));
+          //   // if(cnt1==0) {
+          //   //   cnt1++;
+          //   //   markers.add(Marker(
+          //   //     anchor: const Offset(0.5, 0.5),
+          //   //     icon: customIcon,
+          //   //     position: LatLng(_originLatitude, _originLongitude),
+          //   //     markerId: MarkerId("Vehicle"),
+          //   //   ));
+          //   // }
+          //   // else
+          //   //   {
+          //   //     markers.add(Marker(
+          //   //       anchor: const Offset(0.5, 0.5),
+          //   //       icon: customIcon,
+          //   //       position: LatLng(_originLatitude-0.0002,_originLongitude), markerId: MarkerId("Vehicle"),
+          //   //     ));
+          //   // }
+          //
+          //   // _getPolyline();
+          //   // polylines
+          //   // markers.clear();
+          //   // polylines.clear();
+          //   setState(() {
+          //
+          //   });
+          // },),
+          // SizedBox(height: 10,),
+          // FloatingActionButton(child: Icon(Icons.battery_std_outlined),onPressed: ()
+          // {
+          //   // GetBatdata().then((value) =>
+          //   // showDialog(context: context, builder: (BuildContext context) {
+          //   //   return Scaffold(
+          //   //       body: Center(
+          //   //           child: Container(
+          //   //             height: MediaQuery.of(context).size.height/2,
+          //   //             width: MediaQuery.of(context).size.width/2,
+          //   //               child: SfRadialGauge(
+          //   //                   axes: <RadialAxis>[
+          //   //                     RadialAxis(minimum: 0, maximum: 20,
+          //   //                         ranges: <GaugeRange>[
+          //   //                           GaugeRange(startValue: 0, endValue: 10, color:Colors.red),
+          //   //                           GaugeRange(startValue: 10,endValue: 14,color: Colors.green),
+          //   //                           GaugeRange(startValue: 14,endValue: 20,color: Colors.red)],
+          //   //                         pointers: <GaugePointer>[
+          //   //                           NeedlePointer(value: li!=null?double.parse(li.result[li.result.length-1].Battery.trim()):"12")],
+          //   //                         annotations: <GaugeAnnotation>[
+          //   //                           GaugeAnnotation(widget: Container(child:
+          //   //                           Text(li!=null?"${li.result[li.result.length-1].Battery.trim()} V":"12 V",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+          //   //                               angle: 90, positionFactor: 0.5
+          //   //                           )]
+          //   //                     )])
+          //   //           )));
+          //   // },));
+          // },),
+          // SizedBox(height: 50,),
         ],
       ),
       // appBar: AppBar(
@@ -1829,7 +1831,7 @@ Padding(
 
       loading = false;
 
-      //    print("Markers "+markers.length.toString());
+      //    print("Markers "+markers.length.toStringAsFixed(6));
     });
   }
 
@@ -1857,11 +1859,11 @@ Padding(
 //     } else {
 //       for (int i = 0; i < MapScreenState.li3.details.length; i++)
 //         if (MapScreenState.li3.details[i].cardName
-//             .toString()
+//             .toStringAsFixed(6)
 //             .toLowerCase()
 //             .contains(query.toLowerCase()) ||
 //             MapScreenState.li3.details[i].cardName
-//                 .toString()
+//                 .toStringAsFixed(6)
 //                 .toLowerCase()
 //                 .contains(query.toLowerCase()))
 //           s.add("${MapScreenState.li3.details[i].cardName}");
