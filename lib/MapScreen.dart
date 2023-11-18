@@ -38,10 +38,14 @@ class MapScreen extends StatefulWidget {
 class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   var otp=0;
 
+  bool dialogclose = false;
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
 
     if(state.name=="paused") {
+      if(!dialogclose)
+        Navigator.pop(context);
       print("timer close");
       timer.cancel();
     }
@@ -50,7 +54,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
       {
         value.setMapStyle("[]");
       });
-      timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      timer = Timer.periodic(const Duration(seconds: 2), (timer) {
         print(markers.length);
         if (markers.length > 2)
           Getdata();
@@ -1297,18 +1301,11 @@ if(li1!=null)
   //     color: Colors.blue);
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    timer.cancel();
-
+WidgetsBinding.instance.removeObserver(this);
     // TODO: implement dispose
     super.dispose();
   }
-  @override
-  void deactivate() {
-    timer.cancel();
-    // TODO: implement deactivate
-    super.deactivate();
-  }
+
   void initState() {
  Contacheck();
     WidgetsBinding.instance.addObserver(this);
@@ -1322,7 +1319,7 @@ if(li1!=null)
     });
     GetdataFirstTime().then((value)
     {
-      timer= Timer.periodic(const Duration(seconds: 4), (timer) {
+      timer= Timer.periodic(const Duration(seconds: 2), (timer) {
         // print(markers.length);
         if(markers.length>2)
         Getdata();});
@@ -1356,8 +1353,10 @@ if(li1!=null)
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
@@ -1504,7 +1503,10 @@ if(li1!=null)
             onPressed: (){
               if(markers.length>2)
                 {
-                  showDialog(context: context, builder: (BuildContext context) {
+                  dialogclose=false;
+                  showDialog(
+                    barrierDismissible: false,
+                    context: context, builder: (BuildContext context) {
                     return AlertDialog(
                     content: SingleChildScrollView(
                       child: Column(
@@ -1548,7 +1550,13 @@ Padding(
 )
                         ],
                       ),
-                    ),);
+                    ),
+                    actions: [
+                      TextButton(onPressed: (){
+                        dialogclose=true;
+                        Navigator.pop(context);
+                    }, child: Text("OK"))
+                    ],);
                   },);
                 }
               else
