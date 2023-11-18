@@ -44,7 +44,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
 
     if(state.name=="paused") {
-      if(!dialogclose)
+      if(dialogclose)
         Navigator.pop(context);
       print("timer close");
       timer.cancel();
@@ -1503,7 +1503,7 @@ WidgetsBinding.instance.removeObserver(this);
             onPressed: (){
               if(markers.length>2)
                 {
-                  dialogclose=false;
+                  dialogclose=true;
                   showDialog(
                     barrierDismissible: false,
                     context: context, builder: (BuildContext context) {
@@ -1553,7 +1553,7 @@ Padding(
                     ),
                     actions: [
                       TextButton(onPressed: (){
-                        dialogclose=true;
+                        dialogclose=false;
                         Navigator.pop(context);
                     }, child: Text("OK"))
                     ],);
