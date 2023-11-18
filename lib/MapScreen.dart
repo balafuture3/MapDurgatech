@@ -272,7 +272,20 @@ if(li1!=null)
                    1].endLocation.lng.toStringAsFixed(6)) {
          if(cntsendsms==0) {
            cntsendsms++;
+           dialogclose=true;
            Fluttertoast.showToast(msg: "Destination Reached");
+           showDialog(context: context, builder: (BuildContext context) {
+             return AlertDialog(
+               title: Text("Destination Reached"),
+               actions: [TextButton(onPressed: ()
+                   {
+                     dialogclose=false;
+                     Navigator.pop(context);
+                   }, child: Text("OK"))],
+
+             );
+           },);
+
            // sender.sendSms(new SmsMessage(MobileNumberController.text, 'Destination Reached, Your OTP is ${math.Random().nextInt(999999).toStringAsFixed(6).padLeft(6, '0')}'));
          }
          //   _sendSMS("Destination Reached", ["7418230370"]);
