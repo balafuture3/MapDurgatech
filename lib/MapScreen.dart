@@ -274,7 +274,9 @@ if(li1!=null)
            cntsendsms++;
            dialogclose=true;
            Fluttertoast.showToast(msg: "Destination Reached");
-           showDialog(context: context, builder: (BuildContext context) {
+           showDialog(context: context,
+             barrierDismissible: false,
+             builder: (BuildContext context) {
              return AlertDialog(
                title: Text("Destination Reached"),
                actions: [TextButton(onPressed: ()
