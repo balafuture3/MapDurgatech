@@ -451,7 +451,7 @@ if(li1!=null)
   }
   Future<Response> StartStop(val) async {
     var url;
-    url = Uri.parse("http://14.98.224.37:903/UpdateStatus");
+    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/dt_updatestatus.php");
     Map data = {
       "status":val
     };
