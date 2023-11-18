@@ -50,7 +50,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
       {
         value.setMapStyle("[]");
       });
-      timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      timer = Timer.periodic(const Duration(seconds: 4), (timer) {
         print(markers.length);
         if (markers.length > 2)
           Getdata();
@@ -453,7 +453,7 @@ if(li1!=null)
     var url;
     url = Uri.parse("http://www.balasblog.co.in/dtZomoto/dt_updatestatus.php");
     Map data = {
-      "status":val
+      "status":val.toString()
     };
     print(jsonEncode(data));
     var response = await http.post(
@@ -1322,7 +1322,7 @@ if(li1!=null)
     });
     GetdataFirstTime().then((value)
     {
-      timer= Timer.periodic(const Duration(seconds: 2), (timer) {
+      timer= Timer.periodic(const Duration(seconds: 4), (timer) {
         // print(markers.length);
         if(markers.length>2)
         Getdata();});
