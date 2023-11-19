@@ -44,8 +44,8 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   void didChangeAppLifecycleState(AppLifecycleState state) {
 
     if(state.name=="paused") {
-      if(dialogclose)
-        Navigator.pop(context);
+      // if(dialogclose)
+      //   Navigator.pop(context);
       print("timer close");
       timer.cancel();
     }
@@ -485,7 +485,7 @@ if(li1!=null)
     print(response.body);
     if (response.statusCode == 200)
     {
-
+    Fluttertoast.showToast(msg: "Updated to server");
       // li=Model.fromJson(json.decode(response.body));
 
     }
@@ -1332,13 +1332,14 @@ WidgetsBinding.instance.removeObserver(this);
         .then((d) {
       customIcon = d;
     });
+    StartStop(start).then((value) =>
     GetdataFirstTime().then((value)
     {
       timer= Timer.periodic(const Duration(seconds: 2), (timer) {
         // print(markers.length);
         if(markers.length>2)
         Getdata();});
-    });
+    }));
     // _kGooglePlex = CameraPosition(target: LatLng(0, 0), zoom: 16);
     //
     // enableTypeahead = true;
