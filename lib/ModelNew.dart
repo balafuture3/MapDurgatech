@@ -56,7 +56,7 @@ ModelNew copyWith({  num status,
 
 class Data {
   Data({
-      String id, 
+      var id,
       String temp, 
       String location, 
       String direction, 
@@ -75,12 +75,12 @@ class Data {
     _direction = json['direction'];
     _createdAt = json['createdAt'];
   }
-  String _id;
+  var _id;
   String _temp;
   String _location;
   String _direction;
   String _createdAt;
-Data copyWith({  String id,
+Data copyWith({  var id,
   String temp,
   String location,
   String direction,

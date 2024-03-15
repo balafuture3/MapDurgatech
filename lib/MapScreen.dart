@@ -156,7 +156,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   Future<Response> Getdata() async {
     var url;
 
-    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/Getdata.php");
+    url = Uri.parse("http://43.204.56.154:8081/main/Getdata1");
 
     // print(url);
     // print(headers);
@@ -397,7 +397,7 @@ if(li1!=null)
   Future<Response> GetdataFirstTime() async {
     var url;
 
-    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/Getdata.php");
+    url = Uri.parse("http://43.204.56.154:8081/main/Getdata1");
 
     // print(url);
     // print(headers);
@@ -414,7 +414,7 @@ if(li1!=null)
     // print(jsonEncode(data));
     var response = await http.post(
       url,
-      // body: jsonEncode(data),
+      body: jsonEncode(data),
       headers: {
         "Content-Type": "application/json",
       },
@@ -470,7 +470,7 @@ if(li1!=null)
   }
   Future<Response> StartStop(val) async {
     var url;
-    url = Uri.parse("http://www.balasblog.co.in/dtZomoto/dt_updatestatus.php");
+    url = Uri.parse("http://43.204.56.154:8081/main/dt_updatestatus1");
     Map data = {
       "status":val.toString()
     };
