@@ -109,7 +109,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
 
   int start=0;
 
-  var direction='O';
+  var direction='F';
 
   var cntsendsms=0;
 
@@ -156,7 +156,7 @@ class MapScreenState extends State<MapScreen>  with WidgetsBindingObserver{
   Future<Response> Getdata() async {
     var url;
 
-    url = Uri.parse("http://43.204.56.154:8081/main/Getdata1");
+    url = Uri.parse("http://43.204.56.154:8081/main/Getdata");
 
     // print(url);
     // print(headers);
@@ -397,7 +397,7 @@ if(li1!=null)
   Future<Response> GetdataFirstTime() async {
     var url;
 
-    url = Uri.parse("http://43.204.56.154:8081/main/Getdata1");
+    url = Uri.parse("http://43.204.56.154:8081/main/Getdata");
 
     // print(url);
     // print(headers);
@@ -470,7 +470,7 @@ if(li1!=null)
   }
   Future<Response> StartStop(val) async {
     var url;
-    url = Uri.parse("http://43.204.56.154:8081/main/dt_updatestatus1");
+    url = Uri.parse("http://43.204.56.154:8081/main/dt_updatestatus");
     Map data = {
       "status":val.toString()
     };
@@ -1589,8 +1589,11 @@ Padding(
               print(markers.length);
               if(markers.length==3) {
                 print(result.points);
-                if (start == 0)
+                if (start == 0) {
                   start = 1;
+                  direction='F';
+                  Getdata();
+                }
                 else
                   start = 0;
                 StartStop(start);
